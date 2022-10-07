@@ -144,7 +144,7 @@ def trip_duration_stats(df):
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
 
-def user_stats(df):
+def user_stats(df, city):
     """Displays statistics on bikeshare users."""
 
     print('\nCalculating User Stats...\n')
@@ -153,29 +153,41 @@ def user_stats(df):
     # TO DO: Display counts of user types
     users = df['User Type'].value_counts()
     print(f'The Count of Users are {users}')
+    ## washington doesn't have both Gender and Birth Year Columns
+    if city != 'washington':
+        # TO DO: Display counts of gender
+        df['Gender'] = df['Gender'].dropna()
+        gender = df['Gender'].value_counts()
+        print(f'The Gender Types are {gender}')
 
-    # TO DO: Display counts of gender
-    df['Gender'] = df['Gender'].dropna()
-    gender = df['Gender'].value_counts()
-    print(f'The Gender Types are {gender}')
+        # TO DO: Display earliest, most recent, and most common year of birth
+        df['Birth Year'] = df['Birth Year'].dropna()
+        early = df['Birth Year'].min()
+        print(f'The Earliest Year is {early}')
 
-    # TO DO: Display earliest, most recent, and most common year of birth
-    df['Birth Year'] = df['Birth Year'].dropna()
-    early = df['Birth Year'].min()
-    print(f'The Earliest Year is {early}')
+        recent = df['Birth Year'].max()
+        print(f'The Recent Year is {recent}')
 
-    recent = df['Birth Year'].max()
-    print(f'The Recent Year is {recent}')
-
-    common = df['Birth Year'].idxmax()
-    print(f'The Most Common Year is {common}')
+        common = df['Birth Year'].idxmax()
+        print(f'The Most Common Year is {common}')
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
+    start_loc = 0
     while True:
         raw = input('\nWould you like to see some raw data? Enter yes or no.\n')
         if raw.lower() == 'yes':
-            print(df.head())
+            print(df[start_loc:start_loc+5])
+            start_loc += 5
+            view_data = input("Do you wish to continue?: ").lower()
+            if view_data == 'yes':
+                continue
+            elif view_data == 'no':
+                print('Thanks for using my Program!!')
+                break
+            else:
+                print("Dude I don't understand.. so i'll get out of here")
+                break
         else:
             break
 def main():
@@ -186,7 +198,7 @@ def main():
         time_stats(df)
         station_stats(df)
         trip_duration_stats(df)
-        user_stats(df)
+        user_stats(df, city)
 
         restart = input('\nWould you like to restart? Enter yes or no.\n')
         if restart.lower() != 'yes':
