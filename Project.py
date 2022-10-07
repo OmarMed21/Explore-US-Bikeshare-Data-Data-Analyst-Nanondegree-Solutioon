@@ -18,30 +18,30 @@ def get_filters():
     print('Hello! Let\'s explore some US bikeshare data!')
     # TO DO: get user input for city (chicago, new york city, washington). HINT: Use a while loop to handle invalid inputs
     while True:
-        city = input('Enter the City (Chicago, NYC, Washington DC) : ')
-        if city not in ('Chicago', 'NYC','Washington DC'):
-            print("Oops Sorry we can't find that")
-            continue
-        else:
+        city = input('Enter the City (chicago, new york city, washington) : ')
+        city = city.lower()
+        if city in ['chicago', 'new york city', 'washington']:
             break
+        else:
+            print("Oops Sorry we can't find that")
 
     # TO DO: get user input for month (all, january, february, ... , june)
     while True:
         month = input('Enter the Month (January, February, March, April, May, June, all) : ')
-        if month not in ('January', 'February', 'March', 'April', 'May', 'June', 'all'):
-            print("Oops Sorry we can't find that")
-            continue
-        else:
+        month = month.lower()
+        if month in ['january', 'february', 'march', 'april', 'may', 'june', 'all']:
             break
+        else:
+            print("Oops Sorry we can't find that")
 
     # TO DO: get user input for day of week (all, monday, tuesday, ... sunday)
     while True:
-        day= input('Enter the day (Saturday, Sunday, Monday, Tuesday, Wednesday, Thursday, Friday) : ')
-        if day not in ('Saturday', 'Sunday', 'Monday', 'Tuesday',' Wednesday', 'Thursday', 'Friday'):
-            print("Oops Sorry we can't find that")
-            continue
-        else:
+        day= input('Enter the day (Saturday, Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, all) : ')
+        day = day.lower()
+        if day in ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'all']:
             break
+        else:
+            print("Oops Sorry we can't find that")
 
     print('-'*40)
     return city, month, day
@@ -65,7 +65,7 @@ def load_data(city, month, day):
 
     # extract month and day of week from Start Time to create new columns
     df['month'] = df['Start Time'].dt.month
-    df['day_of_week'] = df['Start Time'].dt.weekday_name
+    df['day_of_week'] = df['Start Time'].dt.dayofweek
 
     # filter by month if applicable
     if month != 'all':
@@ -172,7 +172,12 @@ def user_stats(df):
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
-
+    while True:
+        raw = input('\nWould you like to see some raw data? Enter yes or no.\n')
+        if raw.lower() == 'yes':
+            print(df.head())
+        else:
+            break
 def main():
     while True:
         city, month, day = get_filters()
